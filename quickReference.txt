@@ -1,0 +1,210 @@
+Event status: EB = Blocked, EC = EO Complete, EE = Event Error, EN = No data for EO, ES = Event Submitted, IC = IFD Complete, IE = IFD Creation Error, IN = IFD With No Data, SC = Event Sent, SE = Send Error
+
+VC_XDX_ORDERLINE_OUB_IFD
+VC_PARTFOOT_INB_IFD
+UC_WAVE_OUB_IFD
+UC_SUPP_INB_IFD
+UC_PURCHASEORDER_IFD
+UC_PARTFOOT_TO_CSV
+UC_PART_OUB_IFD
+UC_PART_INB_IFD
+UC_ORDER_INB_IFD
+UC_MOVEPLAN_TO_CSV
+UC_MOVE_IMPORT_FROM_TM_IFD
+UC_ELEVATOR_MOVE_OUB_IFD
+UC_CUST_INB_IFD
+SHIP_CONFIRM_ORDER-LENS
+INVENTORY_STATUS_CHANGE_IFD
+INVENTORY_RECONCILIATION_IFD
+INVENTORY_RECEIPT_IFD
+INVENTORY_ADJUST
+
+/*Algorithm VC_PRCESS_INTERFACE_TABLE content*/
+VC_PRCESS_INTERFACE_TABLE:
+if( 'UC_SUPP_TO_CSV' = :i_c_evt_id and 'UC_SUPP_SEG'=:i_c_ifd_seg_id)
+{
+    [insert into ARC_SUPP_INB_IFD select * from SUPP_INB_IFD where supnum=:i_c_supnum and client_id=:i_c_client_id]
+    |
+    [delete from SUPP_INB_IFD where supnum=:i_c_supnum and client_id=:i_c_client_id]
+}
+else if( 'UC_CUST_TO_CSV' = :i_c_evt_id and 'UC_ADDR_SEG'=:i_c_ifd_seg_id)
+{
+    [insert into ARC_CUST_INB_IFD_ADDR select * from CUST_INB_IFD_ADDR where HOST_EXT_ID=:i_c_cstnum and client_id=:i_c_client_id]
+    |
+    [delete from CUST_INB_IFD_ADDR where HOST_EXT_ID=:i_c_cstnum and client_id=:i_c_client_id]
+}
+else if( 'UC_CUST_TO_CSV' = :i_c_evt_id and 'UC_CUST_SEG'=:i_c_ifd_seg_id)
+{
+    [insert into ARC_CUST_INB_IFD_CUST select * from CUST_INB_IFD_CUST where cstnum=:i_c_cstnum and client_id=:i_c_client_id]
+    |
+    [delete from CUST_INB_IFD_CUST where cstnum=:i_c_cstnum and client_id=:i_c_client_id]
+}
+else if( 'UC_PART_TO_CSV' = :i_c_evt_id and 'UC_PART_SEG'=:i_c_ifd_seg_id)
+{
+    [insert into ARC_PART_INB_IFD_PART select * from PART_INB_IFD_PART where prtnum=:i_c_prtnum and prt_client_id=:i_c_prt_client_id]
+    |
+    [delete from PART_INB_IFD_PART where prtnum=:i_c_prtnum and prt_client_id=:i_c_prt_client_id]
+}
+else if( 'UC_PART_TO_CSV' = :i_c_evt_id and 'UC_PART_DESCRIPTION_SEG'=:i_c_ifd_seg_id)
+{
+    [insert into ARC_PART_INB_IFD_PART_DESC select * from PART_INB_IFD_PART_DESC where prtnum=:i_c_prtnum and prt_client_id=:i_c_prt_client_id]
+    |
+    [delete from PART_INB_IFD_PART_DESC where prtnum=:i_c_prtnum and prt_client_id=:i_c_prt_client_id]
+}
+else if( 'UC_PART_TO_CSV' = :i_c_evt_id and 'UC_PART_ALT_PRTNUM_SEG'=:i_c_ifd_seg_id)
+{
+    [insert into ARC_PART_INB_IFD_PART_ALT select * from PART_INB_IFD_PART_ALT where prtnum=:i_c_prtnum and alt_prtnum=:i_c_alt_prtnum and prt_client_id=:i_c_prt_client_id]
+    |
+    [delete from PART_INB_IFD_PART_ALT where prtnum=:i_c_prtnum and alt_prtnum=:i_c_alt_prtnum and prt_client_id=:i_c_prt_client_id]
+}
+else if( 'UC_PART_TO_CSV' = :i_c_evt_id and 'UC_PART_FOOTPRINT_SEG'=:i_c_ifd_seg_id)
+{
+    [insert into ARC_PART_INB_IFD_PART_FTP select * from PART_INB_IFD_PART_FTP where prtnum=:i_c_prtnum and prt_client_id=:i_c_prt_client_id]
+    |
+    [delete from PART_INB_IFD_PART_FTP where prtnum=:i_c_prtnum and prt_client_id=:i_c_prt_client_id]
+}
+else if( 'UC_PART_TO_CSV' = :i_c_evt_id and 'UC_PART_FOOTPRINT_DTL_SEG'=:i_c_ifd_seg_id)
+{
+    [insert into ARC_PART_INB_IFD_PART_FTP_DTL select * from PART_INB_IFD_PART_FTP_DTL where prtnum=:i_c_prtnum and uomcod =:i_c_uomcod and prt_client_id=:i_c_prt_client_id]
+    |
+    [delete from PART_INB_IFD_PART_FTP_DTL where prtnum=:i_c_prtnum and uomcod =:i_c_uomcod and prt_client_id=:i_c_prt_client_id]
+}
+else if( 'UC_ORDER_TO_CSV' = :i_c_evt_id and 'UC_ORDER_SEG'=:i_c_ifd_seg_id)
+{
+    [insert into ARC_ORDER_INB_IFD_ORDER select * from ORDER_INB_IFD_ORDER where ordnum=:i_c_ordnum and client_id=:i_c_client_id]
+    |
+    [delete from ORDER_INB_IFD_ORDER where ordnum=:i_c_ordnum and client_id=:i_c_client_id]
+}
+else if( 'UC_ORDER_TO_CSV' = :i_c_evt_id and 'UC_ORDER_NOTE_SEG'=:i_c_ifd_seg_id)
+{
+    [insert into ARC_ORDER_INB_IFD_Order_Note select * from ORDER_INB_IFD_Order_Note where ordnum=:i_c_ordnum and notlin=:i_c_notlin and client_id=:i_c_client_id]
+    |
+    [delete from ORDER_INB_IFD_Order_Note where ordnum=:i_c_ordnum and notlin=:i_c_notlin and client_id=:i_c_client_id]
+}
+else if( 'UC_ORDER_TO_CSV' = :i_c_evt_id and 'UC_ORDER_LINE_SEG'=:i_c_ifd_seg_id)
+{
+    [insert into ARC_ORDER_INB_IFD_Order_Line select * from ORDER_INB_IFD_Order_Line where ordnum=:i_c_ordnum and ordlin =:i_c_ordlin and ordsln =:i_c_ordsln and client_id=:i_c_client_id]
+    |
+    [delete from ORDER_INB_IFD_Order_Line where ordnum=:i_c_ordnum and ordlin =:i_c_ordlin and ordsln =:i_c_ordsln and client_id=:i_c_client_id]
+}
+else if( 'UC_ORDER_TO_CSV' = :i_c_evt_id and 'UC_ORDER_LINE_NOTE_SEG'=:i_c_ifd_seg_id)
+{
+    [insert into ARC_ORDER_INB_IFD_OrderLin_Not select * from ORDER_INB_IFD_Order_Line_Note where ordnum=:i_c_ordnum and ordlin =:i_c_ordlin and ordsln =:i_c_ordsln and notlin=:i_c_notlin and client_id=:i_c_client_id]
+    |
+    [delete from ORDER_INB_IFD_Order_Line_Note where ordnum=:i_c_ordnum and ordlin =:i_c_ordlin and ordsln =:i_c_ordsln and notlin=:i_c_notlin and client_id=:i_c_client_id]
+}
+else if( 'UC_DISTRO_TO_CSV' = :i_c_evt_id and 'UC_DISTRO_INB_IFD'=:i_c_ifd_seg_id)
+{
+    [insert into arc_DISTRO_INB_IFD select * from DISTRO_INB_IFD where client_id=:i_c_client_id and distro_id=:i_c_distro_id]
+    |
+    [delete from DISTRO_INB_IFD where client_id=:i_c_client_id and distro_id=:i_c_distro_id]
+}
+else if( 'UC_PARTFOOT_TO_CSV' = :i_c_evt_id and 'PARTFOOT_SEG' = :i_c_ifd_seg_id)
+{
+    [insert into ARC_PARTFOOT_INB_IFD_PTP select * from PARTFOOT_INB_IFD_PTP where prt_client_id=:i_c_prt_client_id and prtnum=:i_c_prtnum and ftpcod=:i_c_ftpcod]
+    |
+    [delete from PARTFOOT_INB_IFD_PTP where prt_client_id=:i_c_prt_client_id and prtnum=:i_c_prtnum and ftpcod=:i_c_ftpcod]
+}
+else if( 'UC_PARTFOOT_TO_CSV' = :i_c_evt_id and 'PARTFOOT_DTL_SEG' = :i_c_ifd_seg_id)
+{
+    [insert into ARC_PARTFOOT_INB_IFD_PTP_DTL select * from PARTFOOT_INB_IFD_PTP_DTL where prt_client_id=:i_c_prt_client_id and prtnum=:i_c_prtnum and ftpcod=:i_c_ftpcod and uomcod=:i_c_uomcod]
+    |
+    [delete from PARTFOOT_INB_IFD_PTP_DTL where prt_client_id=:i_c_prt_client_id and prtnum=:i_c_prtnum and ftpcod=:i_c_ftpcod and uomcod=:i_c_uomcod]
+}
+
+/*Job TMS_Interface_TO_CSV content*/
+TMS_Interface_TO_CSV:
+[select car_move_id, move_plan_id from MOVE_IMPORT_FROM_TM_IFD_CAR c
+  where exists (select 1 from MOVE_IMPORT_FROM_TM_IFD_STOP s where c.move_plan_Id=s.move_plan_Id and c.car_move_id=s.car_move_id)] catch(@?)
+|
+if (@? = 0)
+{
+    [select count(*) cnt from move_import_from_tm_ifd_shdtl dl 
+	  where dl.move_plan_Id=@move_plan_id and not exists (select 1 from ord_line ol where dl.ordnum=ol.ordnum and dl.ordlin=ol.ordlin )]
+	|
+    if(@cnt = 0)
+    {
+	    /* Back up the data before we change them  */
+		[
+		    insert into arc_move_import_ifd_shdtl
+			select * from move_import_from_tm_ifd_shdtl sd
+			where exists (select 1 from ord_line ol 
+						   where ol.ordnum=sd.ordnum and ol.ordlin=sd.ordlin and ol.alc_search_path in ('BC_PATH', 'BL_PATH')
+						  )
+			    and move_plan_Id=@move_plan_id
+				and exists (select 1
+								 from move_import_from_tm_ifd_ship s 
+								 where s.HOST_EXT_ID=sd.HOST_EXT_ID and s.move_plan_id=sd.move_plan_Id
+									   and s.car_move_id=@car_move_id and s.move_plan_id=@move_plan_id
+						)
+		] catch(@?)
+		|
+		/* update the id to negative, so that we know they are not original data */
+		[
+		    update move_import_from_tm_ifd_shdtl sd set id=id*(-1)
+			where exists (select 1 from ord_line ol 
+						   where ol.ordnum=sd.ordnum and ol.ordlin=sd.ordlin and ol.alc_search_path in ('BC_PATH', 'BL_PATH')
+						  )
+			    and move_plan_Id=@move_plan_id
+				and exists (select 1
+								 from move_import_from_tm_ifd_ship s 
+								 where s.HOST_EXT_ID=sd.HOST_EXT_ID and s.move_plan_id=sd.move_plan_Id
+									   and s.car_move_id=@car_move_id and s.move_plan_id=@move_plan_id
+						)
+		]catch(@?)
+		|
+	    [					
+		    update move_import_from_tm_ifd_shdtl sd
+			set HOST_EXT_ID = (select min(s2.host_ext_id) 
+								 from move_import_from_tm_ifd_ship s, move_import_from_tm_ifd_ship s2
+								 where s.HOST_EXT_ID=sd.HOST_EXT_ID and s.move_plan_id=sd.move_plan_Id
+								 and s2.move_plan_id=sd.move_plan_Id and s.rt_ext_id=s2.rt_ext_id
+									   and s.car_move_id=@car_move_id and s.move_plan_id=@move_plan_id
+									   
+							   )
+			where exists (select 1 from ord_line ol 
+						   where ol.ordnum=sd.ordnum and ol.ordlin=sd.ordlin and ol.alc_search_path in ('BC_PATH', 'BL_PATH')
+						  )
+				 and exists (select 1
+								 from move_import_from_tm_ifd_ship s 
+								 where s.HOST_EXT_ID=sd.HOST_EXT_ID and s.move_plan_id=sd.move_plan_Id
+									   and s.car_move_id=@car_move_id and s.move_plan_id=@move_plan_id
+						)
+				  AND sd.move_plan_Id=@move_plan_id
+		]catch(@?)
+		|
+	    sl_log var event where evt_id='UC_MOVEPLAN_TO_CSV' and sys_id='DCS' and car_move_id=@car_move_id and move_plan_id=@move_plan_id
+    }		  
+}
+
+
+/*Algorithm VC_ARCHIVE_TM_MOVE content, */
+VC_ARCHIVE_TM_MOVE:
+publish data where <<OVERSTACKED_ARGS>>
+|
+[insert into arc_move_import_ifd_shdtl 
+  select * from move_import_from_tm_ifd_shdtl 
+  where move_plan_id=:i_c_move_plan_id and host_ext_id in (select a.host_ext_id from move_import_from_tm_ifd_ship a
+               where a.move_plan_id=:i_c_move_plan_id and a.car_move_id=:i_c_car_move_id)
+] catch(@?)
+|
+[delete from move_import_from_tm_ifd_shdtl 
+  where move_plan_id=:i_c_move_plan_id and host_ext_id in (select a.host_ext_id from move_import_from_tm_ifd_ship a
+               where a.move_plan_id=:i_c_move_plan_id and a.car_move_id=:i_c_car_move_id)
+] catch(@?)
+|
+[insert into arc_move_import_ifd_ship 
+  select * from move_import_from_tm_ifd_ship where move_plan_id=:i_c_move_plan_id and car_move_id=:i_c_car_move_id
+] catch(@?)
+|
+[delete from move_import_from_tm_ifd_ship where move_plan_id=:i_c_move_plan_id and car_move_id=:i_c_car_move_id] catch(@?)
+|
+[insert into arc_move_import_ifd_stop 
+    select * from move_import_from_tm_ifd_stop where move_plan_id=:i_c_move_plan_id and car_move_id=:i_c_car_move_id] catch(@?)
+|
+[delete from move_import_from_tm_ifd_stop where move_plan_id=:i_c_move_plan_id and car_move_id=:i_c_car_move_id] catch(@?)
+|
+[insert into arc_move_import_ifd_car 
+    select * from move_import_from_tm_ifd_car where move_plan_id=:i_c_move_plan_id and car_move_id=:i_c_car_move_id] catch(@?)
+|
+[delete from move_import_from_tm_ifd_car where move_plan_id=:i_c_move_plan_id and car_move_id=:i_c_car_move_id] catch(@?)
