@@ -303,7 +303,7 @@
 		 where status = 77703
 		   and message = '已完成补货，需要重新分配'
 	}
-		
+
 ]]>
 </local-syntax>
 </command>
